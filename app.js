@@ -2581,7 +2581,21 @@ app.get('/', (req, res) => {
   res.send('✅ Candidate Login API is running!');
 });
 
+app.delete('/api/jobs/:jobId', async (req, res) => {
+  try {
+    const { jobId } = req.params;
+    const deletedJob = await Job.findByIdAndDelete(jobId);
 
+    if (!deletedJob) {
+      return res.status(404).json({ message: 'Job not found' });
+    }
+
+    res.status(200).json({ message: 'Job deleted successfully', deletedJob });
+  } catch (err) {
+    console.error('Error deleting job:', err);
+    res.status(500).json({ message: 'Failed to delete job', error: err.message });
+  }
+});
 const transporter = nodemailer.createTransport({
   service: 'gmail', // ✅ Use service instead of host for Gmail
   auth: {
@@ -2692,6 +2706,98 @@ app.post('/api/send-email', async (req, res) => {
     res.status(500).json({ success: false, message: 'Failed to send email' });
   }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+app.post('/api/send-emailotp', async (req, res) => {
+  const { email } = req.body;
+  
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({ success: false, message: 'Invalid email address' });
+  }
+
+  // Generate random 6-digit OTP
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+  try {
+    const mailOptions = {
+      from: 'practice66375@gmail.com',
+      to: email,
+      subject: 'Your OTP Code',
+      text: `Your OTP is: ${otp}`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+                color: #333;
+                padding: 20px;
+                background-color: #f9f9f9;
+              }
+              .container {
+                max-width: 400px;
+                margin: auto;
+                background-color: #ffffff;
+                padding: 30px;
+                border: 1px solid #e0e0e0;
+                border-radius: 8px;
+                box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+                text-align: center;
+              }
+              .otp-code {
+                font-size: 36px;
+                font-weight: bold;
+                color: #004aad;
+                letter-spacing: 8px;
+                margin: 20px 0;
+                padding: 20px;
+                background-color: #f0f8ff;
+                border-radius: 8px;
+                border: 2px solid #004aad;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <h2>Your OTP Code</h2>
+              <div class="otp-code">${otp}</div>
+            </div>
+          </body>
+        </html>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    
+    res.json({
+      success: true,
+      message: 'OTP sent successfully',
+      otp: otp // Remove this in production for security
+    });
+    
+  } catch (error) {
+    console.error('Error sending email:', error);
+    res.status(500).json({ success: false, message: 'Failed to send email' });
+  }
+});
+
+
+
+
+
+
+
 
 
 // Start Server
