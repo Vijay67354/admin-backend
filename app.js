@@ -1,5 +1,5 @@
 
-import express, { urlencoded } from 'express';
+import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
@@ -30,12 +30,8 @@ if (!fs.existsSync(uploadDir)) {
 const app = express();
 
 // Middleware
-
 app.use(cors());
-app.use(express.static(path.join(__dirname, '/client/dist')));
 app.use(express.json());
-app.use(urlencoded({extended:true}))
-
 // Configure Multer storage
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
