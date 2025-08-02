@@ -30,7 +30,31 @@ if (!fs.existsSync(uploadDir)) {
 const app = express();
 
 // Middleware
-app.use(cors());
+// app.use(cors());
+
+// CORS configuration
+const corsOptions = {
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:5500',
+    'https://adminsite-1-1247.onrender.com',
+    'https://fronter.netlify.app'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+// Apply CORS middleware
+app.use(cors(corsOptions));
+
+// Parse JSON bodies
+app.use(express.json());
+
+// Handle preflight requests
+app.options('*', cors(corsOptions));
 app.use(express.json());
 // Configure Multer storage
 const storage = multer.diskStorage({
