@@ -39,7 +39,7 @@ const corsOptions = {
     'http://localhost:3001',
     'http://127.0.0.1:3000',
     'http://127.0.0.1:5500',
-    'https://adminsite-1-1247.onrender.com',
+   'https://adminsite-1-l247.onrender.com',
     'https://fronter.netlify.app'
   ],
   credentials: true,
