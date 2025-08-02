@@ -2802,7 +2802,7 @@ app.post('/api/send-emailotp', async (req, res) => {
 
 // Start Server
 app.listen(5006, () => {
-  console.log('🚀 Server running at http://localhost:5006');
+  console.log('🚀 Server running at https://adminsite-1-l247.onrender.com/');
 });
 
 
